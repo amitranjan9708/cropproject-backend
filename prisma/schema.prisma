@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id         String    @id @default(uuid())
+  email      String    @unique
+  password   String?   // Optional because of Google OAuth
+  name       String?
+  googleId   String?   @unique
+  otp        String?
+  otpExpires DateTime?
+  isVerified Boolean   @default(false)
+  role       Role      @default(USER)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Product {
+  id            String   @id @default(uuid())
+  name          String
+  price         String
+  originalPrice String?
+  section       String
+  description   String?
+  rating        Float?
+  stock          Int      @default(0)
+  images         String[] @default([])
+  details        Json?
+  externalLink   String?
+  availableSizes String[] @default(["S", "M", "L", "XL"])
+  createdAt      DateTime @default(now())
+}
